@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Strong - Marketing Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;800;900&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary Brand Colors */
+            --primary-blue: #0066CC;
+            --primary-green: #00A651;
+            --franchise-color: #0066CC;
+            --athlete-color: #00A651;
+            
+            /* Platform Colors */
+            --meta-blue: #1877F2;
+            --google-blue: #4285F4;
+            
+            /* Status Colors */
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+            --accent-gold: #F7B731;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            
+            /* Shadows & Effects */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,102,204,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,102,204,0.12);
+            --shadow-xl: 0 20px 40px rgba(0,102,204,0.15);
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            padding: 3rem 1rem 2rem;
+            text-align: center;
+            background: var(--white);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Small Credibility Stats (Below Header) */
+        .credibility-stats-small {
+            margin-top: 2rem;
+            padding: 1.5rem 0;
+        }
+
+        .stats-container-small {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card-small {
+            background: rgba(255,255,255,0.95);
+            border-radius: var(--border-radius-sm);
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .stat-card-small:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon-small {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .stat-card-small:nth-child(1) .stat-icon-small { animation-delay: 0s; }
+        .stat-card-small:nth-child(2) .stat-icon-small { animation-delay: 0.5s; }
+        .stat-card-small:nth-child(3) .stat-icon-small { animation-delay: 1s; }
+
+        .stat-value-small {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-title-small {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-indicator-small {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .indicator-verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+
+        .indicator-live {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .indicator-monitoring {
+            background: rgba(247, 183, 49, 0.1);
+            color: var(--accent-gold);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .pulse-dot.green { background: var(--success-green); }
+        .pulse-dot.blue { background: var(--primary-blue); }
+        .pulse-dot.gold { background: var(--accent-gold); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,102,204,0.1);
+        }
+
+        .hero-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-blue);
+            background: rgba(0, 102, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 3rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--gray-900);
+        }
+
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .column {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .column.franchise {
+            border-color: var(--franchise-color);
+            background: linear-gradient(135deg, rgba(0,102,204,0.02) 0%, rgba(0,102,204,0.05) 100%);
+        }
+
+        .column.athlete {
+            border-color: var(--athlete-color);
+            background: linear-gradient(135deg, rgba(0,166,81,0.02) 0%, rgba(0,166,81,0.05) 100%);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .column-icon {
+            font-size: 2rem;
+        }
+
+        .column-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .column-description {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            background: var(--white);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-blue);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .metric-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .metric-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 50px;
+            padding: 2px;
+            position: relative;
+        }
+
+        .toggle-option {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .toggle-option.active {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .metric-embed {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            background: var(--gray-50);
+        }
+
+        .metric-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* Coming Soon Placeholder */
+        .coming-soon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--border-radius-sm);
+            color: var(--gray-500);
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .coming-soon:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--white) 0%, rgba(0,102,204,0.02) 100%);
+        }
+
+        .coming-soon-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--warning-amber);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .coming-soon-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .coming-soon-text {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Platform Sections */
+        .meta-section {
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.02) 0%, rgba(24, 119, 242, 0.05) 100%);
+            border-top: 4px solid var(--meta-blue);
+        }
+
+        .google-section {
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.02) 0%, rgba(66, 133, 244, 0.05) 100%);
+            border-top: 4px solid var(--google-blue);
+        }
+
+        .meta-section .section-title {
+            color: var(--meta-blue);
+        }
+
+        .google-section .section-title {
+            color: var(--google-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .two-column-layout {
+                gap: 2rem;
+            }
+            
+            .section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container-small {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-link {
+                justify-content: center;
+            }
+            
+            .two-column-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-card-small {
+                padding: 1rem;
+            }
+            
+            .stat-value-small {
+                font-size: 1.25rem;
+            }
+            
+            .dashboard-header {
+                padding: 2rem 1rem 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .column {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            background: var(--gray-50);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-300);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1 class="hero-title">Marketing Intelligence Dashboard</h1>
+        <p class="hero-subtitle">Performance Tracking & Analytics</p>
+        
+        <!-- Credibility Stats Section -->
+        <div class="credibility-stats-small">
+            <div class="stats-container-small">
+                <div class="stat-card-small">
+                    <span class="stat-icon-small">📊</span>
+                    <div class="stat-value-small">99.8%</div>
+                    <div class="stat-title-small">Data Accuracy</div>
+                    <div class="stat-indicator-small indicator-verified">
+                        <div class="pulse-dot green"></div>
+                        Verified Accurate
+                    </div>
+                </div>
+                
+                <div class="stat-card-small">
+                    <span class="stat-icon-small">⚡</span>
+                    <div class="stat-value-small">Real-Time</div>
+                    <div class="stat-title-small">Updates</div>
+                    <div class="stat-indicator-small indicator-live">
+                        <div class="pulse-dot blue"></div>
+                        Live Data
+                    </div>
+                </div>
+                
+                <div class="stat-card-small">
+                    <span class="stat-icon-small">🌐</span>
+                    <div class="stat-value-small">24/7</div>
+                    <div class="stat-title-small">Monitoring</div>
+                    <div class="stat-indicator-small indicator-monitoring">
+                        <div class="pulse-dot gold"></div>
+                        Always On
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="#overview" class="nav-link active" data-section="overview">
+                📊 Overview
+            </a>
+            <a href="#meta" class="nav-link" data-section="meta">
+                📘 Meta Performance
+            </a>
+            <a href="#google" class="nav-link" data-section="google">
+                🔍 Google Performance
+            </a>
+        </div>
+    </nav>
+
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <h2 class="section-title">Marketing Overview - Franchise vs Athlete</h2>
+        
+        <div class="two-column-layout">
+            <!-- Franchise Performance Column -->
+            <div class="column franchise">
+                <div class="column-header">
+                    <span class="column-icon">🏢</span>
+                    <div>
+                        <div class="column-title">Franchise Performance</div>
+                        <div class="column-description">Total performance across all channels</div>
+                    </div>
+                </div>
+                
+                <!-- Total Ad Spend -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Total Ad Spend</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/a141c55f302c153bbff01d7cecaf31645bab238687686e9?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/3bc871fa6ac5a1e93f67fa66e30f39962c9cdfc68768796?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Total Leads -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">📊 Total Leads</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/acadffadddb91b86d933a54afc0d05dada9184687687ec?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/d394d1c268b3cdb81f7e4f3ac18e9023269939c6876895b?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Cost Per Lead -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Cost Per Lead</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/a262fb57bb98f7f63406d79ccd73729d496034468769c63?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/67f49e17e513467534d887e63e09007a522b47468769bf8?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Coming Soon Metrics -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">✅ Total Qualified Leads</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🎯</div>
+                        <div class="coming-soon-text">Advanced lead qualification tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Cost Per Qualified Lead</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💎</div>
+                        <div class="coming-soon-text">Qualified lead cost analysis</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🎯 Total Sales</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🏆</div>
+                        <div class="coming-soon-text">Sales conversion tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🧮 Cost Per Acquisition</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💰</div>
+                        <div class="coming-soon-text">Customer acquisition cost analysis</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Athlete Performance Column -->
+            <div class="column athlete">
+                <div class="column-header">
+                    <span class="column-icon">🏃</span>
+                    <div>
+                        <div class="column-title">Athlete Performance</div>
+                        <div class="column-description">Total performance across all channels</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Total Ad Spend</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💰</div>
+                        <div class="coming-soon-text">Athlete advertising spend tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">👥 Total Leads</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">👥</div>
+                        <div class="coming-soon-text">Athlete lead generation tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Cost Per Lead</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💵</div>
+                        <div class="coming-soon-text">Athlete lead cost analysis</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">✅ Total Qualified Leads</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">✅</div>
+                        <div class="coming-soon-text">Athlete qualified lead tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Cost Per Qualified Lead</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💎</div>
+                        <div class="coming-soon-text">Athlete qualified lead cost tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🎯 Total Sales</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🎯</div>
+                        <div class="coming-soon-text">Athlete sales conversion tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🧮 Cost Per Sale</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🧮</div>
+                        <div class="coming-soon-text">Athlete cost per sale analysis</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meta Performance Section -->
+    <section id="meta" class="section meta-section">
+        <h2 class="section-title">Meta Performance</h2>
+        
+        <div class="two-column-layout">
+            <!-- Franchise Sales (Meta) -->
+            <div class="column franchise">
+                <div class="column-header">
+                    <span class="column-icon">🏢</span>
+                    <div>
+                        <div class="column-title">Franchise Sales (Meta)</div>
+                        <div class="column-description">Facebook & Instagram advertising performance</div>
+                    </div>
+                </div>
+                
+                <!-- Meta Total Ad Spend -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Meta Total Ad Spend</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/05d2abeddeb0200ef8db9754687d47fd575d74468769d43?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/bcc717a3287936f13608bec337f89b05d09ddc6876a3f4?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Meta Total Leads -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">📘 Meta Total Leads</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/0d254fa02d4729a093ea0099ed7b7b0a4b7f83c6876a447?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/126f16ac34d8d7a661dc4e6ef1911a1c14dea6c6876a50c?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Meta Cost Per Lead -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Meta Cost Per Lead</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/8f1e7e314af58080855efb9a10706b9a1811ea06876a564?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/13b4ab02c56c495ef7d679300828bd187d87f06876a5a6?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Athlete Sales (Meta) -->
+            <div class="column athlete">
+                <div class="column-header">
+                    <span class="column-icon">🏃</span>
+                    <div>
+                        <div class="column-title">Athlete Sales (Meta)</div>
+                        <div class="column-description">Athlete-focused Meta advertising performance</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Meta Total Ad Spend</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">📘</div>
+                        <div class="coming-soon-text">Athlete Meta advertising spend tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">📘 Meta Total Leads</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">📘</div>
+                        <div class="coming-soon-text">Athlete Meta lead generation tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Meta Cost Per Lead</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💵</div>
+                        <div class="coming-soon-text">Athlete Meta cost per lead analysis</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🧮 Meta Cost Per Sale</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🧮</div>
+                        <div class="coming-soon-text">Athlete Meta cost per sale tracking</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Performance Section -->
+    <section id="google" class="section google-section">
+        <h2 class="section-title">Google Performance</h2>
+        
+        <div class="two-column-layout">
+            <!-- Franchise Sales (Google) -->
+            <div class="column franchise">
+                <div class="column-header">
+                    <span class="column-icon">🏢</span>
+                    <div>
+                        <div class="column-title">Franchise Sales (Google)</div>
+                        <div class="column-description">Google Ads advertising performance</div>
+                    </div>
+                </div>
+                
+                <!-- Google Total Ad Spend -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Google Total Ad Spend</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/2b8c1846ad7150fdb8a3bdae668ebd755a754046876a6a6?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/2080b7acdb2e37cf7e15bc15f88d163a5aa67846876a72d?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Google Total Leads -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🔍 Google Total Leads</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/add988837b023e64fd4db377c577423e27eb5606876a776?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/7b433ed245646fd0419f073ea8ecebd8204cf846876a7f5?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Google Cost Per Lead -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Google Cost Per Lead</div>
+                        <div class="metric-toggle">
+                            <div class="toggle-option active" data-period="ytd">YTD</div>
+                            <div class="toggle-option" data-period="mtd">MTD</div>
+                        </div>
+                    </div>
+                    <div class="metric-embed">
+                        <iframe class="ytd-embed" src="https://app.databox.com/datawall/b1a931b00963dc385388b603f6e811462482b446876a843?i" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="mtd-embed" src="https://app.databox.com/datawall/f93c810e5e42c2ecb9e0239ff99f56e833f57d46876a88c?i" frameborder="0" allowfullscreen style="display: none;"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Athlete Sales (Google) -->
+            <div class="column athlete">
+                <div class="column-header">
+                    <span class="column-icon">🏃</span>
+                    <div>
+                        <div class="column-title">Athlete Sales (Google)</div>
+                        <div class="column-description">Athlete-focused Google advertising performance</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💰 Google Total Ad Spend</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🔍</div>
+                        <div class="coming-soon-text">Athlete Google advertising spend tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🔍 Google Total Leads</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🔍</div>
+                        <div class="coming-soon-text">Athlete Google lead generation tracking</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">💵 Google Cost Per Lead</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">💵</div>
+                        <div class="coming-soon-text">Athlete Google cost per lead analysis</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">🎯 Google Cost Per Acquisition</div>
+                    </div>
+                    <div class="coming-soon">
+                        <div class="coming-soon-badge">Coming Soon</div>
+                        <div class="coming-soon-icon">🎯</div>
+                        <div class="coming-soon-text">Athlete Google acquisition cost tracking</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navigation Active State Management
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+
+            // Smooth scrolling for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    
+                    // Update active state
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Intersection Observer for automatic navigation highlighting
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -80% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.id;
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('data-section') === sectionId) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                if (section.id) {
+                    observer.observe(section);
+                }
+            });
+
+            // YTD/MTD Toggle Functionality
+            document.querySelectorAll('.metric-toggle').forEach(toggle => {
+                const options = toggle.querySelectorAll('.toggle-option');
+                const card = toggle.closest('.metric-card');
+                const ytdEmbed = card.querySelector('.ytd-embed');
+                const mtdEmbed = card.querySelector('.mtd-embed');
+
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        // Update active state
+                        options.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+
+                        // Toggle iframe visibility
+                        const period = this.getAttribute('data-period');
+                        if (period === 'ytd') {
+                            if (ytdEmbed) ytdEmbed.style.display = 'block';
+                            if (mtdEmbed) mtdEmbed.style.display = 'none';
+                        } else if (period === 'mtd') {
+                            if (ytdEmbed) ytdEmbed.style.display = 'none';
+                            if (mtdEmbed) mtdEmbed.style.display = 'block';
+                        }
+                    });
+                });
+            });
+
+            // Loading state for iframes
+            document.querySelectorAll('iframe').forEach(iframe => {
+                iframe.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                iframe.style.opacity = '0';
+                iframe.style.transition = 'opacity 0.3s ease';
+            });
+
+            // Add entrance animations
+            const animateOnScroll = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            // Apply animation to metric cards and stats
+            document.querySelectorAll('.metric-card, .stat-card-small').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                animateOnScroll.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
